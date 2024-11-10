@@ -1,17 +1,27 @@
 import { prisma } from "@root/prisma";
 import { METRIC_TYPES } from "@root/src/constants";
+import { convertDistancesByUnit } from "@root/src/helpers/distance";
+import { convertTemperaturesByUnit } from "@root/src/helpers/temperature";
 import { getMetricsQuerySchema } from "@root/src/schemas/get-metrics.schema";
 import { Request, Response } from "express";
 import { z } from "zod";
 
 type GetMetricsQuery = z.infer<typeof getMetricsQuerySchema>;
 
-function getDistances(query: Omit<GetMetricsQuery, "type">) {
-  return prisma.distance.findMany({ where: query });
+async function getDistances(query: Omit<GetMetricsQuery, "type">) {
+  const { unit, createdBy } = query;
+  const distances = await prisma.distance.findMany({
+    where: { createdBy },
+  });
+  return unit ? convertDistancesByUnit(distances, unit) : distances;
 }
 
-function getTemperatures(query: Omit<GetMetricsQuery, "type">) {
-  return prisma.temperature.findMany({ where: query });
+async function getTemperatures(query: Omit<GetMetricsQuery, "type">) {
+  const { unit, createdBy } = query;
+  const temperatures = await prisma.temperature.findMany({
+    where: { createdBy },
+  });
+  return unit ? convertTemperaturesByUnit(temperatures, unit) : temperatures;
 }
 
 export const getMetrics = async (req: Request, res: Response) => {

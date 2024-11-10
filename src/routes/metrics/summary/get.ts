@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import { groupBy, last } from "lodash/fp";
 import { METRIC_TYPES } from "@root/src/constants";
 import { convertTimePeriod } from "@root/src/utils/date";
+import { convertDistancesByUnit } from "@root/src/helpers/distance";
+import { convertTemperaturesByUnit } from "@root/src/helpers/temperature";
 
 type GetMetricSummaryQuery = z.infer<typeof getMetricSummaryQuerySchema>;
 
@@ -14,14 +16,15 @@ function groupData<Record extends { createdAt: Date }>(records: Record[]) {
     return format(record.createdAt, "yyyy-MM-dd");
   }, records);
 
-  return Object.values(groupedRecords).map(last);
+  const data = Object.values(groupedRecords).map(last).filter(Boolean);
+  return data as Record[];
 }
 
 async function getDistanceSummary(query: Omit<GetMetricSummaryQuery, "type">) {
-  const { timePeriod } = query;
+  const { unit, timePeriod } = query;
   const { startDate, endDate } = convertTimePeriod(timePeriod);
 
-  const allDistances = await prisma.distance.findMany({
+  const distances = await prisma.distance.findMany({
     where: {
       createdAt: {
         gte: startDate,
@@ -33,16 +36,19 @@ async function getDistanceSummary(query: Omit<GetMetricSummaryQuery, "type">) {
     },
   });
 
-  return groupData(allDistances);
+  const groupedDistances = groupData(distances);
+  return unit
+    ? convertDistancesByUnit(groupedDistances, unit)
+    : groupedDistances;
 }
 
 async function getTemperatureSummary(
   query: Omit<GetMetricSummaryQuery, "type">
 ) {
-  const { timePeriod } = query;
+  const { unit, timePeriod } = query;
   const { startDate, endDate } = convertTimePeriod(timePeriod);
 
-  const allTemperatures = await prisma.temperature.findMany({
+  const temperatures = await prisma.temperature.findMany({
     where: {
       createdAt: {
         gte: startDate,
@@ -54,7 +60,10 @@ async function getTemperatureSummary(
     },
   });
 
-  return groupData(allTemperatures);
+  const groupedTemperatures = groupData(temperatures);
+  return unit
+    ? convertTemperaturesByUnit(groupedTemperatures, unit)
+    : groupedTemperatures;
 }
 
 export const getMetricSummary = async (req: Request, res: Response) => {

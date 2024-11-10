@@ -22,3 +22,8 @@ export const TEMPERATURE_UNITS = {
 };
 
 export const TEMPERATURE_UNIT_VALUES = Object.values(TEMPERATURE_UNITS);
+
+export const METER_CM_RATIO = 100;
+export const METER_INCH_RATIO = 39.3701;
+export const METER_FEET_RATIO = 3.28084;
+export const METER_YARD_RATIO = 1.09361;

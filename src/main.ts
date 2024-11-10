@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { createMetric } from "./routes/metrics/post";
+import { getMetrics } from "./routes/metrics/get";
 
 const app = express();
 
@@ -10,6 +11,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.post("/metrics", createMetric);
+app.get("/metrics", getMetrics);
 
 const PORT = process.env.SERVER_PORT || 3000;
 app.listen(PORT, () => {

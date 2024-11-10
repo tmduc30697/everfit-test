@@ -4,7 +4,7 @@ import {
   METRIC_TYPE_VALUES,
   METRIC_TYPES,
   TEMPERATURE_UNIT_VALUES,
-  TEMPERATURE_UNITS,
+  TIME_PERIOD_REGEX,
 } from "../constants";
 import { convertTimePeriod } from "../utils/date";
 
@@ -18,7 +18,7 @@ export const getMetricSummaryQuerySchema = z
       }),
     timePeriod: z
       .string()
-      .regex(/^\d{4}-\d{2}-\d{2} - \d{4}-\d{2}-\d{2}$/)
+      .regex(TIME_PERIOD_REGEX)
       .refine((timePeriod) => {
         const { startDate, endDate } = convertTimePeriod(timePeriod);
 

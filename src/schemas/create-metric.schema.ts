@@ -8,11 +8,18 @@ import {
 
 export const createMetricBodySchema = z
   .object({
-    type: z.number().refine((type, ...args) => {
+    type: z.number().refine((type) => {
       return METRIC_TYPE_VALUES.includes(type);
     }),
     value: z.number(),
     unit: z.number(),
+    createdAt: z
+      .string()
+      .optional()
+      .refine((createdAt) => {
+        if (!createdAt) return true;
+        return !isNaN(new Date(createdAt).getTime());
+      }),
     createdBy: z.number(),
   })
   .refine((data) => {

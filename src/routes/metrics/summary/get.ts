@@ -6,8 +6,7 @@ import { format } from "date-fns";
 import { groupBy, last } from "lodash/fp";
 import { METRIC_TYPES } from "@root/src/constants";
 import { convertTimePeriod } from "@root/src/utils/date";
-import { convertDistancesByUnit } from "@root/src/helpers/distance";
-import { convertTemperaturesByUnit } from "@root/src/helpers/temperature";
+import { convertDistancesByUnit, convertTemperaturesByUnit } from "@root/src/helpers/metric";
 
 type GetMetricSummaryQuery = z.infer<typeof getMetricSummaryQuerySchema>;
 
@@ -32,7 +31,7 @@ async function getDistanceSummary(query: Omit<GetMetricSummaryQuery, "type">) {
       },
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: "asc",
     },
   });
 

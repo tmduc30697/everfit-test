@@ -6,6 +6,7 @@
   "author": "Tong Minh Duc <tmduc30697@gmail.com>",
   "license": "MIT",
   "scripts": {
+    "migrate": "prisma migrate dev",
     "dev": "ts-node -r tsconfig-paths/register src/main.ts"
   },
   "dependencies": {

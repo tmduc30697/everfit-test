@@ -1,4 +1,3 @@
-import { Distance } from "@prisma/client";
 import {
   DISTANCE_UNITS,
   METER_CM_RATIO,
@@ -41,7 +40,7 @@ function convertFromMeterTo(value: number, toUnit: number): number {
   }
 }
 
-function convertToUnit(
+export function convertDistanceToUnit(
   value: number,
   fromUnit: number,
   toUnit: number
@@ -49,19 +48,3 @@ function convertToUnit(
   const meterValue = convertToMeter(value, fromUnit);
   return convertFromMeterTo(meterValue, toUnit);
 }
-
-export const convertDistancesByUnit = <
-  Record extends Pick<Distance, "value" | "unit">
->(
-  distances: Record[],
-  toUnit: number
-) => {
-  return distances.map((distance) => {
-    const { value, unit: fromUnit } = distance;
-    return {
-      ...distance,
-      value: convertToUnit(value, fromUnit, toUnit),
-      unit: toUnit,
-    };
-  });
-};

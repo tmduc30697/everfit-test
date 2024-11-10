@@ -1,7 +1,9 @@
 import { prisma } from "@root/prisma";
 import { METRIC_TYPES } from "@root/src/constants";
-import { convertDistancesByUnit } from "@root/src/helpers/distance";
-import { convertTemperaturesByUnit } from "@root/src/helpers/temperature";
+import {
+  convertDistancesByUnit,
+  convertTemperaturesByUnit,
+} from "@root/src/helpers/metric";
 import { getMetricsQuerySchema } from "@root/src/schemas/get-metrics.schema";
 import { Request, Response } from "express";
 import { z } from "zod";

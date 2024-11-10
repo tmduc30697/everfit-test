@@ -1,4 +1,3 @@
-import { Temperature } from "@prisma/client";
 import { TEMPERATURE_UNITS } from "../constants";
 
 function convertToCelsius(value: number, fromUnit: number) {
@@ -27,7 +26,7 @@ function convertFromCelciusTo(value: number, toUnit: number) {
   }
 }
 
-function convertToUnit(
+export function convertTemperatureToUnit(
   value: number,
   fromUnit: number,
   toUnit: number
@@ -35,19 +34,3 @@ function convertToUnit(
   const celsiusValue = convertToCelsius(value, fromUnit);
   return convertFromCelciusTo(celsiusValue, toUnit);
 }
-
-export const convertTemperaturesByUnit = <
-  Record extends Pick<Temperature, "value" | "unit">
->(
-  temperatures: Record[],
-  toUnit: number
-) => {
-  return temperatures.map((temperature) => {
-    const { value, unit: fromUnit } = temperature;
-    return {
-      ...temperature,
-      value: convertToUnit(value, fromUnit, toUnit),
-      unit: toUnit,
-    };
-  });
-};

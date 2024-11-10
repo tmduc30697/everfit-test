@@ -10,14 +10,22 @@ export const getMetricsQuerySchema = z
   .object({
     type: z
       .string()
+      .regex(/^\d+$/)
       .transform((str) => Number(str))
       .refine((type) => {
         return METRIC_TYPE_VALUES.includes(type);
       }),
-    createdBy: z.string().transform((str) => Number(str)),
+    createdBy: z
+      .string()
+      .regex(/^\d+$/)
+      .transform((str) => Number(str)),
     unit: z
       .string()
       .optional()
+      .refine((unit) => {
+        if (!unit) return true;
+        return /^\d+$/.test(unit);
+      })
       .transform((str) => Number(str)),
   })
   .refine((query) => {

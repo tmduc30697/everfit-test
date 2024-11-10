@@ -27,3 +27,5 @@ export const METER_CM_RATIO = 100;
 export const METER_INCH_RATIO = 39.3701;
 export const METER_FEET_RATIO = 3.28084;
 export const METER_YARD_RATIO = 1.09361;
+
+export const TIME_PERIOD_REGEX = /^\d{4}-\d{2}-\d{2} - \d{4}-\d{2}-\d{2}$/
